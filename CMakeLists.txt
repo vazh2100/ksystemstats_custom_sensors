@@ -4,6 +4,7 @@ project(ksystemstats_plugin LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+add_compile_options(-fexceptions)
 
 
 set(KSYSGUARD_VERSION "6.2.4")
@@ -27,20 +28,13 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core)
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons)
 find_package(KSysGuard ${KSYSGUARD_VERSION} REQUIRED)
 
-include(KDEInstallDirs)
-include(KDECMakeSettings)
-include(KDECompilerSettings NO_POLICY_SCOPE)
-include(KDEClangFormat)
-
 add_library(ksystemstats_plugin MODULE
   ksystemstatsplugin.cpp
   ksystemstatsplugin.h
 )
 
-
-
-
-target_link_libraries(ksystemstats_plugin KF6::CoreAddons KSysGuard::SystemStats)
-target_compile_definitions(ksystemstats_plugin PUBLIC)
+target_link_libraries(ksystemstats_plugin
+PRIVATE KF6::CoreAddons KSysGuard::SystemStats
+)
 set(KSYSTEMSTATS_PLUGIN_INSTALL_DIR ${KDE_INSTALL_PLUGINDIR}/ksystemstats)
 install(TARGETS ksystemstats_plugin DESTINATION ${KSYSTEMSTATS_PLUGIN_INSTALL_DIR})

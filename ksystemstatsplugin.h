@@ -1,15 +1,19 @@
 #pragma once
 
-#include <ksysguard/systemstats/SensorPlugin.h>
+#include <stdexcept>
+
 #include <ksysguard/systemstats/SensorContainer.h>
 #include <ksysguard/systemstats/SensorObject.h>
+#include <ksysguard/systemstats/SensorPlugin.h>
 #include <ksysguard/systemstats/SensorProperty.h>
 
 #include <KPluginFactory>
-#include <QObject>
+#include <QDir>
 #include <QFile>
+#include <QMetaEnum>
+#include <QObject>
+#include <QStandardPaths>
 #include <QTextStream>
-
 
 class KSystemStatsPlugin : public KSysGuard::SensorPlugin
 {
@@ -21,14 +25,14 @@ public:
     ~KSystemStatsPlugin() override = default;
 
     void update() override;
-    void readFileAndUpdate(const QString &path, KSysGuard::SensorProperty &sensor);
 
 private:
     KSysGuard::SensorContainer m_sensor_container;
     KSysGuard::SensorObject m_sensor_object;
-    KSysGuard::SensorProperty m_custom_sensor_1;
-    KSysGuard::SensorProperty m_custom_sensor_2;
-    KSysGuard::SensorProperty m_custom_sensor_3;
-    KSysGuard::SensorProperty m_custom_sensor_4;
-    KSysGuard::SensorProperty m_custom_sensor_5;
+    QList<QSharedPointer<KSysGuard::SensorProperty>> sensors;
+    QList<QString> filesToScan;
+    void createConfigIfNeeded();
+    void createSensorsFromConfig();
+    void createSensor(QString sensor);
+    void readFileAndUpdate(const QString &path, QSharedPointer<KSysGuard::SensorProperty> sensor);
 };

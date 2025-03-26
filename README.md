@@ -25,10 +25,7 @@ cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build . && sudo cmake --install .
 ### Default usage
 Create a script or service that writes sensor values to the following files:  
 `/tmp/custom_sensor_1.txt`  
-`/tmp/custom_sensor_2.txt`  
-`/tmp/custom_sensor_3.txt`  
-`/tmp/custom_sensor_4.txt`  
-`/tmp/custom_sensor_5.txt`
+`/tmp/custom_sensor_2.txt`
 
 For example, I use this plugin to get the processor's skin temperature and core temperature from the `ryzenadj`
 program.  
@@ -46,36 +43,22 @@ done
 ```
 
 ### Customization
-
-###### You can change the file paths where the plugin reads sensor values in `ksystemstatsplugin.cpp`:
-```cpp
-QString file1 = QStringLiteral("/tmp/custom_sensor_1.txt");
-QString file2 = QStringLiteral("/tmp/custom_sensor_2.txt");
-QString file3 = QStringLiteral("/tmp/custom_sensor_3.txt");
-QString file4 = QStringLiteral("/tmp/custom_sensor_4.txt");
-QString file5 = QStringLiteral("/tmp/custom_sensor_5.txt");
+###### You can add or remove sensors in `~/.config/customsensorrc`:
+```
+[Sensor]
+id=custom_sensor_1 #unique id
+name=CPU Skin #name of sensor
+file=/tmp/custom_sensor_1.txt #file where the sensor reads value
+unit=UnitCelsius #measure unit
+[Sensor]
+id=custom_sensor_2
+name=CPU THM
+file=/tmp/custom_sensor_2.txt
+unit=UnitCelsius
 ```
 
-###### You can change sensor titles in `ksystemstatsplugin.cpp`:
-```cpp
-m_custom_sensor_1(QStringLiteral("custom_sensor_1"), QStringLiteral("Custom Sensor 1"), QVariant(0), &m_sensor_object),
-m_custom_sensor_2(QStringLiteral("custom_sensor_2"), QStringLiteral("Custom Sensor 2"), QVariant(0), &m_sensor_object),
-m_custom_sensor_3(QStringLiteral("custom_sensor_3"), QStringLiteral("Custom Sensor 3"), QVariant(0), &m_sensor_object),
-m_custom_sensor_4(QStringLiteral("custom_sensor_4"), QStringLiteral("Custom Sensor 4"), QVariant(0), &m_sensor_object),
-m_custom_sensor_5(QStringLiteral("custom_sensor_5"), QStringLiteral("Custom Sensor 5"), QVariant(0), &m_sensor_object)
+###### `Unit` possible values:
 ```
-
-###### You can change the measurement unit types in `ksystemstatsplugin.cpp`:
-```cpp
-m_custom_sensor_1.setUnit(KSysGuard::UnitCelsius);
-m_custom_sensor_2.setUnit(KSysGuard::UnitCelsius);
-m_custom_sensor_3.setUnit(KSysGuard::UnitCelsius);
-m_custom_sensor_4.setUnit(KSysGuard::UnitCelsius);
-m_custom_sensor_5.setUnit(KSysGuard::UnitCelsius);
-```
-
-Possible values:
-```cpp
     // Byte size units.
     UnitByte
     UnitKiloByte
@@ -83,6 +66,7 @@ Possible values:
     UnitGigaByte
     UnitTeraByte
     UnitPetaByte
+    
     // Data rate units.
     UnitByteRate
     UnitKiloByteRate
@@ -153,4 +137,3 @@ Possible values:
     UnitRate
     UnitRpm
 ```
-
