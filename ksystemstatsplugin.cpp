@@ -27,12 +27,10 @@ void KSystemStatsPlugin::createConfigIfNeeded()
     auto file = getFile();
 
     if (!file->exists()) {
-        QString initialSensor1 = "[Sensor]\nid=custom_sensor_1\nname=Custom Sensor 1\nfile=/tmp/custom_sensor_1.txt\nunit=UnitCelsius\n";
-        QString initialSensor2 = "[Sensor]\nid=custom_sensor_2\nname=Custom Sensor 2\nfile=/tmp/custom_sensor_2.txt\nunit=UnitCelsius";
-
         if (file->open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
             QTextStream out(file);
-            out << initialSensor1 << initialSensor2;
+            out << "[Sensor]\nid=custom_sensor_1\nname=Custom Sensor 1\nfile=/tmp/custom_sensor_1.txt\nunit=UnitCelsius\n";
+            out << "[Sensor]\nid=custom_sensor_2\nname=Custom Sensor 2\nfile=/tmp/custom_sensor_2.txt\nunit=UnitCelsius";
             file->close();
         }
     }

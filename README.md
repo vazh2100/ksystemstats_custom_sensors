@@ -31,14 +31,18 @@ For example, I use this plugin to get the processor's skin temperature and core 
 program.  
 This is my `runit` service. The `tmp` directory is mounted as `tmpfs` (RAM memory):
 ```bash
-#!/bin/bash
 while true; do
-    INFO=$(/usr/bin/ryzenadj -i) # Get output info
-    SKIN_TEMP=$(echo "$INFO" | grep "STT VALUE APU" | cut -d '|' -f3 | tr -d ' ') # Extract the desired value // 30.1
-    THM_CORE=$(echo "$INFO" | grep "THM VALUE CORE" | cut -d '|' -f3 | tr -d ' ') # Extract the desired value // 35.7
-    echo "$SKIN_TEMP" > /tmp/custom_sensor_1.txt # Write the value to a file
-    echo "$THM_CORE" > /tmp/custom_sensor_2.txt # Write the value to a file
-    sleep 2
+    /usr/bin/ryzenadj -i | awk -F'|' '
+#     NR == 7  && /STAPM LIMIT/     { print $3+0 > "/tmp/STAPM_LIMIT"; next }
+#     NR == 8  && /STAPM VALUE/     { print $3+0 > "/tmp/STAMP_VALUE"; next }
+#     NR == 9  && /PPT LIMIT FAST/  { print $3+0 > "/tmp/FAST_LIMIT";  next }
+#     NR == 10 && /PPT VALUE FAST/  { print $3+0 > "/tmp/FAST_VALUE";  next }
+#     NR == 11 && /PPT LIMIT SLOW/  { print $3+0 > "/tmp/SLOW_LIMIT";  next }
+#     NR == 12 && /PPT VALUE SLOW/  { print $3+0 > "/tmp/SLOW_VALUE";  next }
+    NR == 26 && /THM VALUE CORE/  { print $3+0 > "/tmp/CPU_THM";     next }
+    NR == 28 && /STT VALUE APU/   { print $3+0 > "/tmp/CPU_SKIN";    next }
+    '
+    sleep 5
 done
 ```
 
