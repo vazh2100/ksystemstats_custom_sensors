@@ -118,9 +118,8 @@ void KSystemStatsPlugin::readFileAndUpdate(const QString &path, QSharedPointer<K
 
     bool ok;
     double value = line.toDouble(&ok);
-    if (ok)
-        sensor->setValue(value);
-
+    if (ok) sensor->setValue(value); 
+    else sensor->setValue(line);
     file.close();
 }
 
